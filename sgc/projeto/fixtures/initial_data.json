@@ -1,0 +1,108 @@
+[
+  {
+    "model": "core.professor",
+    "pk": 1,
+    "fields": {
+      "nome": "Rodrigo Lira",
+      "email": "rodrigo.lira@paulista.ifpe.edu.br",
+      "lattes": "http://buscatextual.cnpq.br/buscatextual/visualizacv.do?id=K4408742J0"
+    }
+  },
+  {
+    "model": "core.professor",
+    "pk": 2,
+    "fields": {
+      "nome": "Mercio Andrade",
+      "email": "mercio.andrade@paulista.ifpe.edu.br",
+      "lattes": "https://www.escavador.com/sobre/6545421/mercio-antonio-oliveira-de-andrade"
+    }
+  },
+  {
+    "model": "core.professor",
+    "pk": 3,
+    "fields": {
+      "nome": "Flávio Oliveira",
+      "email": "flavio.oliveira@paulista.ifpe.edu.br",
+      "lattes": "http://lattes.cnpq.br/6828380394080049"
+    }
+  },
+  {
+    "model": "projeto.tipo",
+    "pk": 1,
+    "fields": { "nome": "extensão" }
+  },
+  {
+    "model": "projeto.tipo",
+    "pk": 2,
+    "fields": { "nome": "pesquisa" }
+  },
+  {
+    "model": "projeto.tipo",
+    "pk": 3,
+    "fields": { "nome": "inovação" }
+  },
+  {
+    "model": "projeto.projeto",
+    "pk": 1,
+    "fields": {
+      "titulo": "Sistema de Monitoramento da Qualidade de Água",
+      "descricao": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque sed magna ac nibh ullamcorper dignissim tristique et tortor. Etiam tempus nibh et arcu pretium tempus. Suspendisse sollicitudin varius mi, nec pellentesque eros pharetra sit amet. Vivamus convallis iaculis egestas.",
+      "inicio": "2021-06-02",
+      "fim": "2022-11-30",
+      "aprovado": true,
+      "coordenador": 1
+    }
+  },
+  {
+    "model": "projeto.projeto",
+    "pk": 2,
+    "fields": {
+      "titulo": "XAI - Uma abordagem diferente",
+      "descricao": "Phasellus lectus arcu, scelerisque vitae dui vel, vestibulum bibendum turpis. Donec nec iaculis orci. Integer id imperdiet ipsum. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.",
+      "inicio": "2021-06-02",
+      "fim": "2022-06-04",
+      "aprovado": false,
+      "coordenador": 3
+    }
+  },
+  {
+    "model": "projeto.tag",
+    "pk": 1,
+    "fields": { "tag": "iot" }
+  },
+  {
+    "model": "projeto.tag",
+    "pk": 2,
+    "fields": { "tag": "ia" }
+  },
+  {
+    "model": "projeto.tipoprojeto",
+    "pk": 1,
+    "fields": { "tipo": 2, "projeto": 1 }
+  },
+  {
+    "model": "projeto.tipoprojeto",
+    "pk": 2,
+    "fields": { "tipo": 2, "projeto": 2 }
+  },
+  {
+    "model": "projeto.colaboradorprojeto",
+    "pk": 1,
+    "fields": { "colaborador": 1, "projeto": 2 }
+  },
+  {
+    "model": "projeto.colaboradorprojeto",
+    "pk": 2,
+    "fields": { "colaborador": 2, "projeto": 1 }
+  },
+  {
+    "model": "projeto.projetotag",
+    "pk": 1,
+    "fields": { "projeto": 1, "tag": 1 }
+  },
+  {
+    "model": "projeto.projetotag",
+    "pk": 2,
+    "fields": { "projeto": 2, "tag": 2 }
+  }
+]

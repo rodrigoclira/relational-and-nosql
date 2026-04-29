@@ -1,0 +1,93 @@
+<!-- templates/projeto/detail.html -->
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Projeto{% endblock %}
+
+{% block head %}
+	<link rel="stylesheet" href="{% static "projeto/comentario.css" %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="py-3 text-left">
+	<h1>{{ projeto.titulo }}</h1>
+</div>
+
+<div class="row">
+	<!-- Right column: description + tags -->
+	<div class="col-md-5 order-md-2">
+		<h4 class="mb-3 text-center">
+			Descrição
+			<span class="badge bg-primary ms-2" title="Armazenado no banco relacional (PostgreSQL/SQLite)">Relacional</span>
+		</h4>
+		<div class="mb-3">
+			<p class="text-justify">{{ projeto.descricao }}</p>
+		</div>
+
+		<div class="mb-3">
+			<label>Tags</label>
+			<div>
+				{% for tag in tags %}
+					<a href="{% url 'projeto:listar_tag' tag.tag %}" class="badge bg-secondary text-decoration-none me-1">{{ tag.tag|upper }}</a>
+				{% endfor %}
+			</div>
+		</div>
+	</div>
+
+	<!-- Left column: coordinator, collaborators, comments -->
+	<div class="col-md-7 order-md-1">
+		<h4 class="mb-3">
+			{{ projeto.titulo }}
+			<span class="badge bg-primary ms-2" title="Armazenado no banco relacional (PostgreSQL/SQLite)">Relacional</span>
+		</h4>
+        <hr class="my-4">
+
+	 	<input type="hidden" id="projetoId" value="{{ projeto.pk }}">
+
+        <div class="mb-3">
+			<label class="fw-bold">Coordenador</label>
+            <div>{{ projeto.coordenador.nome }}</div>
+		</div>
+
+        <hr class="my-4">
+
+		<div class="mb-3">
+			<label class="fw-bold">E-mail</label>
+            <div>{{ projeto.coordenador.email }}</div>
+        </div>
+
+        <hr class="my-4">
+
+        <div class="mb-3">
+			<label class="fw-bold">Lattes</label>
+            <div>
+                <a href="{{ projeto.coordenador.lattes }}" target="_blank">{{ projeto.coordenador.lattes }}</a>
+            </div>
+		</div>
+
+        <hr class="my-4">
+
+		<div class="mb-3">
+			<label class="fw-bold">Colaboradores</label>
+            <ul class="list-group list-group-flush">
+                {% for colaborador in colaboradores %}
+                    <li class="list-group-item">{{ colaborador.colaborador.nome }}</li>
+                {% empty %}
+                    <li class="list-group-item text-muted">Nenhum colaborador.</li>
+                {% endfor %}
+            </ul>
+		</div>
+
+        <hr class="my-4">
+
+		{% if comentario_settings %}
+			{% include "projeto/comentario.html" with comentarios=comentarios %}
+		{% endif %}
+	</div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+	<script src="{% static 'projeto/comentario.js' %}"></script>
+{% endblock %}

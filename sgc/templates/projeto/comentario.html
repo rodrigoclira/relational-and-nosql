@@ -1,0 +1,42 @@
+<hr class="my-4">
+
+<div class="container">
+    <div class="row">
+        <h3>
+            Perguntas
+            <span class="badge bg-success ms-2" title="Armazenado no MongoDB (banco NoSQL)">MongoDB</span>
+        </h3>
+    </div>
+
+    <div class="row">
+        <div class="col-12" id="comment-list">
+            {% if comentarios %}
+                {% for comentario in comentarios %}
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <span class="fw-bold text-primary">usuário</span>
+                            <small class="text-muted">{{ comentario.criado_em|date:"d/m/Y H:i" }}</small>
+                        </div>
+                        <p class="mb-2">{{ comentario.texto }}</p>
+                        <div class="d-flex gap-3">
+                            <small class="text-muted" style="cursor:pointer">Remover</small>
+                            <small class="text-muted" style="cursor:pointer">Responder</small>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- https://bbbootstrap.com/snippets/bootstrap-comments-list-font-awesome-icons-and-toggle-button-91650380 -->
+    <div class="row mt-3">
+        <div class="col-12">
+            <textarea placeholder="Me faça uma pergunta..." class="form-control mb-2" id="comment-area" rows="3"></textarea>
+            <button type="submit" class="btn btn-success" id="comment-btn">
+                <i class="fa fa-share"></i> Perguntar
+            </button>
+        </div>
+    </div>
+</div>

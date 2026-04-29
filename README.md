@@ -13,32 +13,83 @@ Neste projeto o MongoDB é utilizado para persistir as informaçẽos dos coment
 pip3 install -r requirements.txt
 ```
 
-> 2. **Instalação do MongoDB**
-> 
-> Use o tutorial do site do MongoDB que seja compatível com o seu SO. 
-> Link direto para o [Amazon Linux](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-amazon/). 
-> Após a instalação, confirme se o daemon foi iniciado. Caso contrário, inicie-o. 
+> 2. **MongoDB**
+>
+> Escolha uma das opções abaixo para rodar o MongoDB.
 
+### Opção A — Docker (recomendado)
+
+Suba o container com:
+
+```bash
+docker compose up -d
+```
+
+Para se conectar ao shell do MongoDB:
+
+```bash
+docker compose exec mongodb mongosh comments
+```
+
+Para parar:
+
+```bash
+docker compose down
+```
+
+### Opção B — Instalação local
+
+Use o tutorial do site do MongoDB compatível com o seu SO.
+Link direto para o [Amazon Linux](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-amazon/).
+Após a instalação, inicie o daemon:
+
+```bash
+sudo systemctl start mongod
+```
+
+Para se conectar ao shell do MongoDB:
+
+```bash
+mongosh comments
+```
 
 ## Comandos
 
-Incialize o daemon do MongoDB. 
+Execute os comandos abaixo dentro da pasta `sgc/` (onde está o `manage.py`).
 
-Para executar projeto django utilize os comandos abaixo na pasta principal do projeto.
+### 1. Aplicar as migrations
 
-Se for a primeira vez que esteja executando 
-```
-$ python manage.py makemigrations
-```
-
-e em seguida inicie a aplicação:
-```
-$ python manage.py runserver
+```bash
+python manage.py migrate
 ```
 
-Por fim, acesse a página inicial no navegador: 
+### 2. Popular o banco de dados
 
-http://127.0.0.1:8000/projeto/
+O comando `seed` carrega os dados de exemplo no banco relacional (SQLite/PostgreSQL) **e** insere comentários de exemplo no MongoDB:
+
+```bash
+python manage.py seed
+```
+
+O que é inserido:
+- 3 professores
+- 3 tipos de projeto (extensão, pesquisa, inovação)
+- 2 projetos com coordenadores, colaboradores e tags
+- 4 comentários no MongoDB (2 por projeto)
+
+> O MongoDB precisa estar rodando antes de executar este comando.
+
+### 3. Iniciar a aplicação
+
+```bash
+python manage.py runserver
+```
+
+Acesse no navegador:
+
+- Projetos: http://127.0.0.1:8000/projeto/
+- Admin: http://127.0.0.1:8000/admin/
+- Info dos bancos: http://127.0.0.1:8000/db-info/
 
 
 ## AWS
