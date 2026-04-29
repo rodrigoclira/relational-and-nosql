@@ -2,41 +2,50 @@
 
 1. Crie um ambiente com o Cloud9 (use a instância `t3.small`)
 
-2. Abra o Cloud9 e copie os arquivos para a pasta principal, através da opção "File" -> "Upload Local File". 
+2. Abra o terminal do Cloud9 e baixe o projeto do GitHub:
 
-![image](https://github.com/user-attachments/assets/d461d27f-fbb7-4b7b-be1a-8bbba5965e38)
-
-3. Instale a biblioteca `libpq-dev` 
-
-```
-sudo apt-get update
-sudo apt install libpq-dev -y
+```bash
+wget https://github.com/rodrigoclira/relational-and-nosql/archive/refs/heads/main.zip
+unzip main.zip
+cd relational-and-nosql-main/
 ```
 
-4. Instale o [MongoDB](MONGO.md)
+3. Instale as dependências do projeto:
 
-5. Em seguida, crie um ambiente virtual e ative-o:
-
-![image](https://github.com/user-attachments/assets/0d1e8927-d6bb-4bc6-8e39-8dae8ec7727c)
-
-```
-python -m venv venv
-source venv/bin/activate
-```
-6. Após ativar o ambiente, instale os pacotes indicados no arquivo `requirements.txt`.
-
-![image](https://github.com/user-attachments/assets/e034c6e4-d317-47dd-9220-b529cc1c4fd4)
-
-```
-pip install -r requirements.txt 
+```bash
+pip3 install -r requirements.txt
 ```
 
-7. Acesse a pasta `sgc` e execute o projeto Django
+4. Suba o MongoDB via Docker:
 
-
-![image](https://github.com/user-attachments/assets/6a694ec1-3e17-46ae-ab9d-be7786f9ddde)
-
+```bash
+docker compose up -d
 ```
+
+Para verificar se o MongoDB está rodando:
+
+```bash
+docker compose exec mongodb mongosh comments
+```
+
+5. Acesse a pasta `sgc` e aplique as migrations:
+
+```bash
+cd sgc/
+python manage.py migrate
+```
+
+6. Popule o banco de dados com os dados de exemplo:
+
+```bash
+python manage.py seed
+```
+
+Isso carrega os projetos/professores no SQLite e insere comentários de exemplo no MongoDB.
+
+7. Inicie o servidor na porta 8080:
+
+```bash
 python manage.py runserver 0.0.0.0:8080
 ```
 
@@ -66,6 +75,3 @@ Pesquise e em seguida, altere o projeto para utilizar os serviços de banco de d
 Mais informações sobre os banco de dados da AWS: https://aws.amazon.com/products/databases/
 
 ![image](https://github.com/user-attachments/assets/badca81c-ca9b-406b-8037-e97cc63fb693)
-
-
-
