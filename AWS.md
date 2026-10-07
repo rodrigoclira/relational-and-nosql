@@ -75,3 +75,16 @@ Pesquise e em seguida, altere o projeto para utilizar os serviços de banco de d
 Mais informações sobre os banco de dados da AWS: https://aws.amazon.com/products/databases/
 
 ![image](https://github.com/user-attachments/assets/badca81c-ca9b-406b-8037-e97cc63fb693)
+
+## Links e imagens quebrados atrás de proxy com prefixo (ex.: `/proxy/8000/...`) usando o Code Web
+
+Se você estiver acessando a aplicação por um proxy que expõe a porta sob um prefixo (padrão `https://SEU-HOST/proxy/<porta>/...`, comum em ambientes web como Cloud9/codeweb), os links internos gerados pelo Django (`{% url %}`) e os arquivos estáticos (`{% static %}`, como o logo) vêm sem esse prefixo, porque o proxy o remove antes de repassar a requisição — por isso o link/imagem acaba apontando para `https://SEU-HOST/projeto/5` (ou `.../static/core/logo.svg`) em vez de `https://SEU-HOST/proxy/8000/projeto/5`.
+
+Para corrigir, exporte a variável `DJANGO_SCRIPT_NAME` com o mesmo prefixo antes de iniciar o servidor, na mesma porta:
+
+```
+export DJANGO_SCRIPT_NAME=/proxy/8000
+python manage.py runserver 0.0.0.0:8000
+```
+
+Se você mudar de porta, atualize o valor da variável junto (`/proxy/<nova-porta>`). Rodando localmente sem esse proxy, basta não definir a variável (ou `unset DJANGO_SCRIPT_NAME`) para manter o comportamento normal.

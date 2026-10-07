@@ -8,6 +8,8 @@ urlpatterns = [
     path('', views.listar, name='listar'), #projeto/
     path('<int:projeto_id>', views.exibir, name='exibir'), #projeto/2
     path('tag/<str:tag_name>', views.listar, name='listar_tag'), #projeto/tag/iot
-    path('comentar/', views.comentar, name='comentar'),
+    path('<int:projeto_id>/comentar', views.comentar, name='comentar'),
+    path('comentario/<str:comentario_id>/curtir', views.curtir, name='curtir'),
+    path('comentario/<str:comentario_id>/responder', views.responder, name='responder'),
 ]
 

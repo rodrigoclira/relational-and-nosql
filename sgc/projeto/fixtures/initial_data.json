@@ -3,52 +3,86 @@
     "model": "core.professor",
     "pk": 1,
     "fields": {
-      "nome": "Rodrigo Lira",
-      "email": "rodrigo.lira@paulista.ifpe.edu.br",
-      "lattes": "http://buscatextual.cnpq.br/buscatextual/visualizacv.do?id=K4408742J0"
+      "nome": "Maria Silva",
+      "email": "maria.silva@ifpe.edu.br",
+      "lattes": "http://lattes.cnpq.br/0000000000000001"
     }
   },
   {
     "model": "core.professor",
     "pk": 2,
     "fields": {
-      "nome": "Mercio Andrade",
-      "email": "mercio.andrade@paulista.ifpe.edu.br",
-      "lattes": "https://www.escavador.com/sobre/6545421/mercio-antonio-oliveira-de-andrade"
+      "nome": "João Souza",
+      "email": "joao.souza@ifpe.edu.br",
+      "lattes": "http://lattes.cnpq.br/0000000000000002"
     }
   },
   {
     "model": "core.professor",
     "pk": 3,
     "fields": {
-      "nome": "Flávio Oliveira",
-      "email": "flavio.oliveira@paulista.ifpe.edu.br",
-      "lattes": "http://lattes.cnpq.br/6828380394080049"
+      "nome": "Ana Oliveira",
+      "email": "ana.oliveira@ifpe.edu.br",
+      "lattes": "http://lattes.cnpq.br/0000000000000003"
     }
   },
   {
     "model": "projeto.tipo",
     "pk": 1,
-    "fields": { "nome": "extensão" }
+    "fields": {
+      "nome": "Pesquisa"
+    }
   },
   {
     "model": "projeto.tipo",
     "pk": 2,
-    "fields": { "nome": "pesquisa" }
+    "fields": {
+      "nome": "Extensão"
+    }
   },
   {
     "model": "projeto.tipo",
     "pk": 3,
-    "fields": { "nome": "inovação" }
+    "fields": {
+      "nome": "Ensino"
+    }
+  },
+  {
+    "model": "projeto.tag",
+    "pk": 1,
+    "fields": {
+      "tag": "python"
+    }
+  },
+  {
+    "model": "projeto.tag",
+    "pk": 2,
+    "fields": {
+      "tag": "web"
+    }
+  },
+  {
+    "model": "projeto.tag",
+    "pk": 3,
+    "fields": {
+      "tag": "iot"
+    }
+  },
+  {
+    "model": "projeto.tag",
+    "pk": 4,
+    "fields": {
+      "tag": "educacao"
+    }
   },
   {
     "model": "projeto.projeto",
     "pk": 1,
     "fields": {
-      "titulo": "Sistema de Monitoramento da Qualidade de Água",
-      "descricao": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque sed magna ac nibh ullamcorper dignissim tristique et tortor. Etiam tempus nibh et arcu pretium tempus. Suspendisse sollicitudin varius mi, nec pellentesque eros pharetra sit amet. Vivamus convallis iaculis egestas.",
-      "inicio": "2021-06-02",
-      "fim": "2022-11-30",
+      "titulo": "Sistema de Gerenciamento de Projetos Institucionais",
+      "descricao": "Aplicação Django usada para ensinar a arquitetura MVT, listando os projetos institucionais dos professores.",
+      "inicio": "2024-02-01",
+      "fim": "2024-12-15",
       "aprovado": true,
       "coordenador": 1
     }
@@ -57,52 +91,228 @@
     "model": "projeto.projeto",
     "pk": 2,
     "fields": {
-      "titulo": "XAI - Uma abordagem diferente",
-      "descricao": "Phasellus lectus arcu, scelerisque vitae dui vel, vestibulum bibendum turpis. Donec nec iaculis orci. Integer id imperdiet ipsum. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.",
-      "inicio": "2021-06-02",
-      "fim": "2022-06-04",
+      "titulo": "Robótica Educacional para Ensino Médio",
+      "descricao": "Oficinas de robótica com kits de baixo custo para estudantes do ensino médio.",
+      "inicio": "2023-08-01",
+      "fim": "2024-07-31",
+      "aprovado": true,
+      "coordenador": 2
+    }
+  },
+  {
+    "model": "projeto.projeto",
+    "pk": 3,
+    "fields": {
+      "titulo": "Monitoramento de Sensores IoT em Hortas Escolares",
+      "descricao": "Rede de sensores para acompanhar umidade e temperatura em hortas mantidas pelos alunos.",
+      "inicio": "2025-03-01",
+      "fim": "2025-12-20",
       "aprovado": false,
       "coordenador": 3
     }
   },
   {
-    "model": "projeto.tag",
-    "pk": 1,
-    "fields": { "tag": "iot" }
+    "model": "projeto.projeto",
+    "pk": 4,
+    "fields": {
+      "titulo": "Extensão em Letramento Digital para Idosos",
+      "descricao": "Curso de extensão para introduzir pessoas idosas da comunidade ao uso de smartphones e internet.",
+      "inicio": "2024-05-01",
+      "fim": "2025-04-30",
+      "aprovado": true,
+      "coordenador": 1
+    }
   },
   {
-    "model": "projeto.tag",
-    "pk": 2,
-    "fields": { "tag": "ia" }
+    "model": "projeto.projeto",
+    "pk": 5,
+    "fields": {
+      "titulo": "Desenvolvimento Web com Django para Iniciantes",
+      "descricao": "Minicurso prático de desenvolvimento web usando o framework Django.",
+      "inicio": "2025-01-15",
+      "fim": "2025-06-30",
+      "aprovado": false,
+      "coordenador": 2
+    }
+  },
+  {
+    "model": "projeto.projeto",
+    "pk": 6,
+    "fields": {
+      "titulo": "Análise de Dados Educacionais com Python",
+      "descricao": "Uso de Python e bibliotecas de dados para analisar indicadores de evasão escolar.",
+      "inicio": "2023-03-01",
+      "fim": "2023-11-30",
+      "aprovado": true,
+      "coordenador": 3
+    }
   },
   {
     "model": "projeto.tipoprojeto",
     "pk": 1,
-    "fields": { "tipo": 2, "projeto": 1 }
+    "fields": {
+      "tipo": 1,
+      "projeto": 1
+    }
   },
   {
     "model": "projeto.tipoprojeto",
     "pk": 2,
-    "fields": { "tipo": 2, "projeto": 2 }
+    "fields": {
+      "tipo": 3,
+      "projeto": 2
+    }
+  },
+  {
+    "model": "projeto.tipoprojeto",
+    "pk": 3,
+    "fields": {
+      "tipo": 1,
+      "projeto": 3
+    }
+  },
+  {
+    "model": "projeto.tipoprojeto",
+    "pk": 4,
+    "fields": {
+      "tipo": 2,
+      "projeto": 4
+    }
+  },
+  {
+    "model": "projeto.tipoprojeto",
+    "pk": 5,
+    "fields": {
+      "tipo": 3,
+      "projeto": 5
+    }
+  },
+  {
+    "model": "projeto.tipoprojeto",
+    "pk": 6,
+    "fields": {
+      "tipo": 1,
+      "projeto": 6
+    }
   },
   {
     "model": "projeto.colaboradorprojeto",
     "pk": 1,
-    "fields": { "colaborador": 1, "projeto": 2 }
+    "fields": {
+      "colaborador": 2,
+      "projeto": 1
+    }
   },
   {
     "model": "projeto.colaboradorprojeto",
     "pk": 2,
-    "fields": { "colaborador": 2, "projeto": 1 }
+    "fields": {
+      "colaborador": 3,
+      "projeto": 1
+    }
+  },
+  {
+    "model": "projeto.colaboradorprojeto",
+    "pk": 3,
+    "fields": {
+      "colaborador": 1,
+      "projeto": 2
+    }
+  },
+  {
+    "model": "projeto.colaboradorprojeto",
+    "pk": 4,
+    "fields": {
+      "colaborador": 2,
+      "projeto": 3
+    }
+  },
+  {
+    "model": "projeto.colaboradorprojeto",
+    "pk": 5,
+    "fields": {
+      "colaborador": 1,
+      "projeto": 5
+    }
+  },
+  {
+    "model": "projeto.colaboradorprojeto",
+    "pk": 6,
+    "fields": {
+      "colaborador": 3,
+      "projeto": 6
+    }
   },
   {
     "model": "projeto.projetotag",
     "pk": 1,
-    "fields": { "projeto": 1, "tag": 1 }
+    "fields": {
+      "projeto": 1,
+      "tag": 2
+    }
   },
   {
     "model": "projeto.projetotag",
     "pk": 2,
-    "fields": { "projeto": 2, "tag": 2 }
+    "fields": {
+      "projeto": 1,
+      "tag": 1
+    }
+  },
+  {
+    "model": "projeto.projetotag",
+    "pk": 3,
+    "fields": {
+      "projeto": 2,
+      "tag": 4
+    }
+  },
+  {
+    "model": "projeto.projetotag",
+    "pk": 4,
+    "fields": {
+      "projeto": 3,
+      "tag": 3
+    }
+  },
+  {
+    "model": "projeto.projetotag",
+    "pk": 5,
+    "fields": {
+      "projeto": 4,
+      "tag": 4
+    }
+  },
+  {
+    "model": "projeto.projetotag",
+    "pk": 6,
+    "fields": {
+      "projeto": 5,
+      "tag": 2
+    }
+  },
+  {
+    "model": "projeto.projetotag",
+    "pk": 7,
+    "fields": {
+      "projeto": 5,
+      "tag": 1
+    }
+  },
+  {
+    "model": "projeto.projetotag",
+    "pk": 8,
+    "fields": {
+      "projeto": 6,
+      "tag": 1
+    }
+  },
+  {
+    "model": "projeto.projetotag",
+    "pk": 9,
+    "fields": {
+      "projeto": 6,
+      "tag": 4
+    }
   }
 ]

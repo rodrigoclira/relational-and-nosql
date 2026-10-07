@@ -87,7 +87,9 @@
                         <th>_id</th>
                         <th>projeto</th>
                         <th>texto</th>
+                        <th>autor</th>
                         <th>curtidas</th>
+                        <th>respostas</th>
                         <th>criado_em</th>
                         <th>modificado_em</th>
                     </tr>
@@ -98,12 +100,67 @@
                         <td><small class="font-monospace">{{ c.id }}</small></td>
                         <td>{{ c.projeto }}</td>
                         <td>{{ c.texto }}</td>
-                        <td>{{ c.curtidas }}</td>
+                        <td>{{ c.autor|default:"—" }}</td>
+                        <td>{{ c.curtidas|default:0 }}</td>
+                        <td>{{ c.respostas|length }}</td>
                         <td>{{ c.criado_em|date:"d/m/Y H:i" }}</td>
                         <td>{{ c.modificado_em|date:"d/m/Y H:i" }}</td>
                     </tr>
                     {% empty %}
-                    <tr><td colspan="6" class="text-muted">Nenhum comentário no MongoDB.</td></tr>
+                    <tr><td colspan="8" class="text-muted">Nenhum comentário no MongoDB.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <h5 class="mt-4">Documentos brutos (lidos direto pelo driver <code>pymongo</code>)</h5>
+        <p class="text-muted small">
+            Repare que as respostas ficam <strong>dentro</strong> da pergunta (sem tabela extra, sem JOIN) e que nem todo
+            documento tem os mesmos campos — o documento "legado" foi gravado antes de existirem <code>autor</code> e
+            <code>respostas</code> e continua válido, sem nenhuma migration.
+        </p>
+        <div class="row row-cols-1 row-cols-lg-2 g-3">
+            {% for doc in documentos %}
+            <div class="col"><pre class="bg-light border rounded p-2 small mb-0 h-100">{{ doc }}</pre></div>
+            {% empty %}
+            <p class="text-muted">Nenhum documento.</p>
+            {% endfor %}
+        </div>
+
+        <h5 class="mt-4">Agregação: perguntas por projeto</h5>
+        <div class="row g-3">
+            <div class="col-md-6">
+                <div class="small fw-bold">MongoDB (<code>$group</code>)</div>
+<pre class="bg-light border rounded p-2 small">db.comentario.aggregate([
+  { $group: {
+      _id: "$projeto",
+      perguntas: { $sum: 1 },
+      curtidas:  { $sum: "$curtidas" },
+      respostas: { $sum: { $size: { $ifNull: ["$respostas", []] } } }
+  } }
+])</pre>
+            </div>
+            <div class="col-md-6">
+                <div class="small fw-bold">SQL equivalente (se as perguntas estivessem em tabelas)</div>
+<pre class="bg-light border rounded p-2 small">SELECT c.projeto_id,
+       COUNT(*)        AS perguntas,
+       SUM(c.curtidas) AS curtidas,
+       SUM((SELECT COUNT(*) FROM resposta r
+            WHERE r.comentario_id = c.id)) AS respostas
+FROM comentario c
+GROUP BY c.projeto_id;</pre>
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-sm table-bordered">
+                <thead class="table-light">
+                    <tr><th>projeto</th><th>título (vem do relacional)</th><th>perguntas</th><th>respostas</th><th>curtidas</th></tr>
+                </thead>
+                <tbody>
+                    {% for a in agregacao %}
+                    <tr><td>{{ a.projeto }}</td><td>{{ a.titulo }}</td><td>{{ a.perguntas }}</td><td>{{ a.respostas }}</td><td>{{ a.curtidas }}</td></tr>
+                    {% empty %}
+                    <tr><td colspan="5" class="text-muted">Sem dados.</td></tr>
                     {% endfor %}
                 </tbody>
             </table>
@@ -112,7 +169,8 @@
         <div class="alert alert-info mt-3">
             <strong>Por que MongoDB aqui?</strong> Comentários têm estrutura flexível e volume variável por projeto.
             O MongoDB permite inserir documentos sem schema rígido — ideal para dados que evoluem com o tempo
-            (ex: adicionar curtidas, respostas aninhadas) sem migrations.
+            (ex: adicionar curtidas, respostas aninhadas) sem migrations. A pergunta e suas respostas são lidas e
+            gravadas como uma unidade — exatamente o padrão de acesso da página do projeto.
         </div>
     </div>
 </div>
@@ -134,7 +192,10 @@
                     <tr><td>Schema</td><td>Rígido (migrations)</td><td>Flexível (sem migrations)</td></tr>
                     <tr><td>Linguagem de consulta</td><td>SQL</td><td>MQL / MongoEngine ORM</td></tr>
                     <tr><td>Relacionamentos</td><td>FK, JOIN</td><td>Referência por ID ou embedded</td></tr>
-                    <tr><td>Transações</td><td>ACID nativo</td><td>Suporte limitado</td></tr>
+                    <tr><td>Dados aninhados (pergunta → respostas)</td><td>Tabela extra + JOIN</td><td>Documento embutido, 1 leitura (<code>$push</code> para inserir)</td></tr>
+                    <tr><td>Contadores (curtidas)</td><td><code>UPDATE … SET n = n + 1</code></td><td><code>$inc</code> atômico no documento</td></tr>
+                    <tr><td>Agregações</td><td><code>GROUP BY</code></td><td>Pipeline <code>aggregate</code> (<code>$group</code>)</td></tr>
+                    <tr><td>Transações</td><td>ACID nativo</td><td>Atomicidade por documento; ACID multi-documento desde a versão 4.0</td></tr>
                     <tr><td>Casos de uso ideais</td><td>Dados estruturados, relatórios</td><td>Dados variáveis, alta escrita</td></tr>
                 </tbody>
             </table>

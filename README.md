@@ -73,9 +73,9 @@ python manage.py seed
 
 O que é inserido:
 - 3 professores
-- 3 tipos de projeto (extensão, pesquisa, inovação)
-- 2 projetos com coordenadores, colaboradores e tags
-- 4 comentários no MongoDB (2 por projeto)
+- 3 tipos de projeto (Pesquisa, Extensão, Ensino) e 4 tags
+- 6 projetos com coordenadores, colaboradores, tipos e tags
+- 4 comentários no MongoDB (nos projetos 1, 2 e 3)
 
 > O MongoDB precisa estar rodando antes de executar este comando.
 
@@ -87,17 +87,39 @@ python manage.py runserver
 
 Acesse no navegador:
 
+- Início: http://127.0.0.1:8000/
 - Projetos: http://127.0.0.1:8000/projeto/
 - Admin: http://127.0.0.1:8000/admin/
 - Info dos bancos: http://127.0.0.1:8000/db-info/
 
+Na listagem é possível buscar projetos pelo título, filtrar por tipo (Pesquisa, Extensão, Ensino) ou por tag (`/projeto/tag/python`), com resultados paginados — bons exemplos de `QuerySet`, `Paginator` e requisições `GET` do Django. Os dados do projeto vêm do banco relacional; as perguntas na página de detalhe são documentos do MongoDB.
+
+As perguntas mostram quatro vantagens do MongoDB, cada uma comparada com o SQL em `/db-info/` e no [MONGOSH.md](MONGOSH.md):
+- **Documento embutido**: as respostas ficam dentro da pergunta (`$push`), lidas numa única consulta, sem JOIN.
+- **Atualização atômica**: o botão "Curtir" usa `$inc`, sem ler-somar-gravar.
+- **Agregação**: o `$group` conta perguntas por projeto (badges da listagem e "Mais comentados" na página inicial).
+- **Schema flexível**: o `seed` grava um documento "legado" sem `autor`/`respostas`, e a aplicação continua funcionando sem migration.
+
+### 4. Acesso ao painel de administrador
+
+Crie um usuário administrador (a criação pede um nome de usuário, e-mail e senha interativamente):
+
+```bash
+python manage.py createsuperuser
+```
+
+Em seguida, acesse `http://127.0.0.1:8000/admin/` e entre com as credenciais criadas. No admin dá para ver na prática `list_display`, `list_filter`, `search_fields` e inlines (`Tipo`, `Colaborador` e `Tag` editáveis direto na tela do `Projeto`).
+
 
 ## AWS
+
+- [Passo a passo com o Cloud9](AWS.md)
 
 Replique o projeto utilizando uma instância do RDS e do DocumentDB na AWS.
 
 ![image](https://github.com/user-attachments/assets/1a043263-ee4d-4ab4-a811-c25823510096)
 
+Se estiver acessando por um proxy que expõe a porta sob um prefixo (ex.: `https://SEU-HOST/proxy/8000/...`, comum em ambientes web como Cloud9/codeweb), os links internos e as imagens/arquivos estáticos do Django podem sair sem esse prefixo e quebrar. Veja como corrigir com a variável `DJANGO_SCRIPT_NAME` na seção ["Links e imagens quebrados atrás de proxy com prefixo" do AWS.md](AWS.md#links-e-imagens-quebrados-atrás-de-proxy-com-prefixo-ex-proxy8000-usando-o-code-web).
 
 ## FAQ
 

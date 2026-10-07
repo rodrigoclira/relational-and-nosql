@@ -1,93 +1,120 @@
 <!-- templates/projeto/detail.html -->
 {% extends 'base.html' %}
-{% load static %}
 
-{% block title %}Projeto{% endblock %}
-
-{% block head %}
-	<link rel="stylesheet" href="{% static "projeto/comentario.css" %}">
-{% endblock %}
+{% block title %}{{ projeto.titulo }}{% endblock %}
 
 {% block content %}
 
-<div class="py-3 text-left">
-	<h1>{{ projeto.titulo }}</h1>
+<a href="{% url 'projeto:listar' %}" class="d-inline-block mb-3 text-decoration-none">&larr; Voltar para Projetos</a>
+
+<div class="d-flex justify-content-between align-items-start flex-wrap mb-4">
+	<h1 class="h3 mb-1">{{ projeto.titulo }}</h1>
+	<span class="badge {% if projeto.aprovado %}bg-success{% else %}bg-secondary{% endif %} fs-6">
+		{% if projeto.aprovado %}Ativo{% else %}Em análise{% endif %}
+	</span>
 </div>
 
-<div class="row">
-	<!-- Right column: description + tags -->
-	<div class="col-md-5 order-md-2">
-		<h4 class="mb-3 text-center">
-			Descrição
-			<span class="badge bg-primary ms-2" title="Armazenado no banco relacional (PostgreSQL/SQLite)">Relacional</span>
-		</h4>
-		<div class="mb-3">
-			<p class="text-justify">{{ projeto.descricao }}</p>
-		</div>
-
-		<div class="mb-3">
-			<label>Tags</label>
-			<div>
-				{% for tag in tags %}
-					<a href="{% url 'projeto:listar_tag' tag.tag %}" class="badge bg-secondary text-decoration-none me-1">{{ tag.tag|upper }}</a>
-				{% endfor %}
+<div class="row g-4">
+	<!-- Coluna principal -->
+	<div class="col-md-7">
+		<div class="card shadow-sm mb-4">
+			<div class="card-body">
+				<h5 class="card-title">
+					Descrição
+					<span class="badge bg-primary ms-2" title="Armazenado no banco relacional (PostgreSQL/SQLite)">Relacional</span>
+				</h5>
+				<p class="card-text mb-0">{{ projeto.descricao }}</p>
 			</div>
 		</div>
-	</div>
 
-	<!-- Left column: coordinator, collaborators, comments -->
-	<div class="col-md-7 order-md-1">
-		<h4 class="mb-3">
-			{{ projeto.titulo }}
-			<span class="badge bg-primary ms-2" title="Armazenado no banco relacional (PostgreSQL/SQLite)">Relacional</span>
-		</h4>
-        <hr class="my-4">
-
-	 	<input type="hidden" id="projetoId" value="{{ projeto.pk }}">
-
-        <div class="mb-3">
-			<label class="fw-bold">Coordenador</label>
-            <div>{{ projeto.coordenador.nome }}</div>
+		<div class="card shadow-sm mb-4">
+			<div class="card-body">
+				<h5 class="card-title mb-3">Colaboradores</h5>
+				<ul class="list-group list-group-flush">
+					{% for colaborador in colaboradores %}
+						<li class="list-group-item">{{ colaborador.colaborador.nome }}</li>
+					{% empty %}
+						<li class="list-group-item text-muted">Nenhum colaborador cadastrado.</li>
+					{% endfor %}
+				</ul>
+			</div>
 		</div>
-
-        <hr class="my-4">
-
-		<div class="mb-3">
-			<label class="fw-bold">E-mail</label>
-            <div>{{ projeto.coordenador.email }}</div>
-        </div>
-
-        <hr class="my-4">
-
-        <div class="mb-3">
-			<label class="fw-bold">Lattes</label>
-            <div>
-                <a href="{{ projeto.coordenador.lattes }}" target="_blank">{{ projeto.coordenador.lattes }}</a>
-            </div>
-		</div>
-
-        <hr class="my-4">
-
-		<div class="mb-3">
-			<label class="fw-bold">Colaboradores</label>
-            <ul class="list-group list-group-flush">
-                {% for colaborador in colaboradores %}
-                    <li class="list-group-item">{{ colaborador.colaborador.nome }}</li>
-                {% empty %}
-                    <li class="list-group-item text-muted">Nenhum colaborador.</li>
-                {% endfor %}
-            </ul>
-		</div>
-
-        <hr class="my-4">
 
 		{% if comentario_settings %}
 			{% include "projeto/comentario.html" with comentarios=comentarios %}
 		{% endif %}
 	</div>
-</div>
-{% endblock %}
 
-{% block scripts %}
-	<script src="{% static 'projeto/comentario.js' %}"></script>
+	<!-- Coluna lateral -->
+	<div class="col-md-5">
+		<div class="card shadow-sm mb-4">
+			<div class="card-body">
+				<h5 class="card-title mb-3">
+					Coordenador
+					<span class="badge bg-primary ms-2" title="Armazenado no banco relacional (PostgreSQL/SQLite)">Relacional</span>
+				</h5>
+
+				<div class="mb-3">
+					<div class="sgc-detail-label">Nome</div>
+					<div class="sgc-detail-value">{{ projeto.coordenador.nome }}</div>
+				</div>
+
+				<div class="mb-3">
+					<div class="sgc-detail-label">E-mail</div>
+					<div class="sgc-detail-value">{{ projeto.coordenador.email }}</div>
+				</div>
+
+				<div>
+					<div class="sgc-detail-label">Lattes</div>
+					<div class="sgc-detail-value">
+						<a href="{{ projeto.coordenador.lattes }}" target="_blank" rel="noopener">{{ projeto.coordenador.lattes }}</a>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="card shadow-sm mb-4">
+			<div class="card-body">
+				<h5 class="card-title mb-3">Período</h5>
+				<div class="d-flex justify-content-between">
+					<div>
+						<div class="sgc-detail-label">Início</div>
+						<div class="sgc-detail-value">{{ projeto.inicio|date:"d/m/Y" }}</div>
+					</div>
+					<div>
+						<div class="sgc-detail-label">Fim</div>
+						<div class="sgc-detail-value">{{ projeto.fim|date:"d/m/Y" }}</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="card shadow-sm mb-4">
+			<div class="card-body">
+				<h5 class="card-title mb-2">Tipo</h5>
+				<div>
+					{% for tipoprojeto in tipos %}
+						<span class="badge bg-info text-dark">{{ tipoprojeto.tipo.nome }}</span>
+					{% empty %}
+						<span class="text-muted">Sem tipo cadastrado.</span>
+					{% endfor %}
+				</div>
+			</div>
+		</div>
+
+		<div class="card shadow-sm">
+			<div class="card-body">
+				<h5 class="card-title mb-2">Tags</h5>
+				<div>
+					{% for projetotag in tags %}
+						<a href="{% url 'projeto:listar_tag' projetotag.tag.tag %}" class="badge bg-secondary text-decoration-none">#{{ projetotag.tag.tag }}</a>
+					{% empty %}
+						<span class="text-muted">Sem tags cadastradas.</span>
+					{% endfor %}
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
 {% endblock %}

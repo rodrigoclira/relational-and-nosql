@@ -157,6 +157,36 @@ db.comentario.findOne()
 
 ---
 
+## O que a aplicação faz no MongoDB
+
+Os mesmos comandos que as views de `projeto/views.py` executam via mongoengine:
+
+```js
+// resposta embutida DENTRO da pergunta ($push) — sem tabela extra, sem JOIN
+db.comentario.updateOne(
+  { projeto: 1 },
+  { $push: { respostas: { autor: "Ana", texto: "Também quero saber!", criado_em: new Date() } } }
+)
+
+// curtida atômica ($inc) — o servidor soma, sem ler-somar-gravar
+db.comentario.updateOne({ projeto: 1 }, { $inc: { curtidas: 1 } })
+
+// perguntas, curtidas e respostas por projeto ($group ≈ GROUP BY)
+db.comentario.aggregate([
+  { $group: {
+      _id: "$projeto",
+      perguntas: { $sum: 1 },
+      curtidas:  { $sum: "$curtidas" },
+      respostas: { $sum: { $size: { $ifNull: ["$respostas", []] } } }
+  } }
+])
+
+// documentos com e sem respostas convivem na mesma coleção (schema flexível)
+db.comentario.find({ respostas: { $exists: false } })
+```
+
+---
+
 ## Diferença para o SQL
 
 | Operação  | SQL                              | MongoDB (mongosh)                          |
@@ -166,3 +196,6 @@ db.comentario.findOne()
 | Atualizar | `UPDATE ... SET ... WHERE ...`   | `db.col.updateOne({filtro}, {$set: {...}})` |
 | Remover   | `DELETE FROM ... WHERE ...`      | `db.col.deleteOne({...})`                  |
 | Contar    | `SELECT COUNT(*) FROM ...`       | `db.col.countDocuments({...})`             |
+| Agrupar   | `SELECT ..., COUNT(*) ... GROUP BY` | `db.col.aggregate([{ $group: {...} }])` |
+| Somar 1   | `UPDATE ... SET n = n + 1`       | `db.col.updateOne({...}, { $inc: { n: 1 } })` |
+| Filhos    | tabela extra + `JOIN`            | array embutido + `$push`                   |

@@ -1,0 +1,125 @@
+/* static/core/style.css — camada visual do SGC, sem alterar nenhuma regra de negócio */
+
+:root {
+    --sgc-primary: #034811;
+    --sgc-primary-dark: #023309;
+    --sgc-bg: #f7f8f6;
+    --sgc-card-border: #e3e6e0;
+}
+
+body {
+    background-color: var(--sgc-bg);
+    color: #212529;
+}
+
+/* Navbar */
+.sgc-navbar {
+    background: linear-gradient(90deg, var(--sgc-primary), var(--sgc-primary-dark));
+}
+
+.sgc-navbar .navbar-brand {
+    font-weight: 600;
+    letter-spacing: 0.03em;
+}
+
+.sgc-navbar .navbar-brand small {
+    display: block;
+    font-size: 0.7rem;
+    font-weight: 400;
+    opacity: 0.85;
+}
+
+/* Botões e links usando a cor institucional */
+.btn-primary,
+.btn-primary:hover,
+.btn-primary:focus {
+    background-color: var(--sgc-primary);
+    border-color: var(--sgc-primary);
+}
+
+.btn-primary:hover {
+    background-color: var(--sgc-primary-dark);
+    border-color: var(--sgc-primary-dark);
+}
+
+.btn-outline-primary {
+    color: var(--sgc-primary);
+    border-color: var(--sgc-primary);
+}
+
+.btn-outline-primary:hover {
+    background-color: var(--sgc-primary);
+    border-color: var(--sgc-primary);
+}
+
+a {
+    color: var(--sgc-primary-dark);
+}
+
+/* Cards de projeto */
+.projeto-card {
+    border: 1px solid var(--sgc-card-border);
+    border-radius: 0.6rem;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    height: 100%;
+}
+
+.projeto-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 0.5rem 1rem rgba(3, 72, 17, 0.12);
+}
+
+.projeto-card .card-title a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.projeto-card .card-title a:hover {
+    color: var(--sgc-primary);
+    text-decoration: underline;
+}
+
+.projeto-descricao-resumo {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* Estado vazio */
+.sgc-empty-state {
+    padding: 3rem 1rem;
+    text-align: center;
+    color: #6c757d;
+}
+
+/* Página de detalhe */
+.sgc-detail-label {
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #6c757d;
+    margin-bottom: 0.15rem;
+}
+
+.sgc-detail-value {
+    font-size: 1rem;
+}
+
+/* Botão flutuante "voltar ao topo" */
+#sgc-back-to-top {
+    position: fixed;
+    right: 1.25rem;
+    bottom: 1.25rem;
+    display: none;
+    z-index: 1030;
+    border-radius: 50%;
+    width: 3rem;
+    height: 3rem;
+    box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.2);
+}
+
+/* Rodapé mais enxuto */
+.sgc-footer {
+    background-color: #fff;
+}

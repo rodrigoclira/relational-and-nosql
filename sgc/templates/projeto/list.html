@@ -5,24 +5,85 @@
 
 {% block content %}
 
-<div class="py-3">
-    <h1>Projetos</h1>
+<div class="py-3 d-flex justify-content-between align-items-end flex-wrap">
+	<div>
+		<h1 class="h3 mb-1">Projetos Institucionais</h1>
+		<p class="text-muted mb-0">Projetos cadastrados pelos professores da instituição.</p>
+		{% if tag_name %}
+			<p class="mb-0 mt-2">Tag: <span class="badge bg-secondary">#{{ tag_name }}</span> <a href="{% url 'projeto:listar' %}" class="small">limpar</a></p>
+		{% endif %}
+	</div>
 </div>
 
-<div class="row">
-    <div class="col-12 col-md-8">
-        {% if projetos %}
-        <ul class="list-group list-group-flush">
-            {% for projeto in projetos %}
-                <li class="list-group-item">
-                    <a href="{% url 'projeto:exibir' projeto.pk %}">{{ projeto.titulo }}</a>
-                </li>
-            {% endfor %}
-        </ul>
-        {% else %}
-            <p class="text-muted">Nenhum projeto encontrado.</p>
-        {% endif %}
-    </div>
+<form method="get" class="card border-0 shadow-sm p-3 mb-4">
+	<div class="row g-2 align-items-end">
+		<div class="col-md-6">
+			<label for="q" class="form-label">Buscar por título</label>
+			<div class="input-group">
+				<span class="input-group-text bg-white">&#128269;</span>
+				<input type="text" name="q" id="q" class="form-control" value="{{ busca }}" placeholder="Ex: Robótica">
+			</div>
+		</div>
+		<div class="col-md-4">
+			<label for="tipo" class="form-label">Tipo</label>
+			<select name="tipo" id="tipo" class="form-select">
+				<option value="">Todos</option>
+				{% for tipo in tipos %}
+					<option value="{{ tipo.pk }}" {% if tipo_id == tipo.pk|stringformat:"s" %}selected{% endif %}>{{ tipo.nome }}</option>
+				{% endfor %}
+			</select>
+		</div>
+		<div class="col-md-2">
+			<button type="submit" class="btn btn-primary w-100">Filtrar</button>
+		</div>
+	</div>
+</form>
+
+{% if projetos %}
+<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3">
+	{% for projeto in projetos %}
+	<div class="col d-flex">
+		<div class="card projeto-card shadow-sm w-100">
+			<div class="card-body d-flex flex-column">
+				<div class="d-flex justify-content-between align-items-start mb-2">
+					<h5 class="card-title mb-0">
+						<a href="{% url 'projeto:exibir' projeto.pk %}">{{ projeto.titulo }}</a>
+					</h5>
+					<span class="badge {% if projeto.aprovado %}bg-success{% else %}bg-secondary{% endif %} ms-2">
+						{% if projeto.aprovado %}Institucionalizado{% else %}Em análise{% endif %}
+					</span>
+				</div>
+				<p class="text-muted small mb-2">
+					Coordenador: {{ projeto.coordenador.nome }}
+					<span class="badge bg-success ms-1" title="Perguntas (contadas no MongoDB)">&#128172; {{ projeto.perguntas }}</span>
+				</p>
+				<p class="card-text projeto-descricao-resumo flex-grow-1">{{ projeto.descricao }}</p>
+				<a href="{% url 'projeto:exibir' projeto.pk %}" class="btn btn-outline-primary btn-sm align-self-start mt-2">Ver detalhes</a>
+			</div>
+		</div>
+	</div>
+	{% endfor %}
 </div>
+
+{% if projetos.has_other_pages %}
+<nav class="mt-4" aria-label="Paginação de projetos">
+	<ul class="pagination justify-content-center">
+		{% if projetos.has_previous %}
+			<li class="page-item"><a class="page-link" href="?page={{ projetos.previous_page_number }}&q={{ busca }}&tipo={{ tipo_id }}">Anterior</a></li>
+		{% endif %}
+		<li class="page-item disabled"><span class="page-link">Página {{ projetos.number }} de {{ projetos.paginator.num_pages }}</span></li>
+		{% if projetos.has_next %}
+			<li class="page-item"><a class="page-link" href="?page={{ projetos.next_page_number }}&q={{ busca }}&tipo={{ tipo_id }}">Próxima</a></li>
+		{% endif %}
+	</ul>
+</nav>
+{% endif %}
+
+{% else %}
+<div class="sgc-empty-state">
+	<div style="font-size: 2.5rem;">&#128193;</div>
+	<p class="mb-0">Nenhum projeto encontrado com esses filtros.</p>
+</div>
+{% endif %}
 
 {% endblock %}

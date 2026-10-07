@@ -1,6 +1,5 @@
 import os
 import mongoengine
-import requests 
 
 """
 Django settings for sgc project.
@@ -19,6 +18,11 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Permite rodar atrás de um proxy com prefixo de path (ex.: o proxy
+# "/proxy/<porta>/" do ambiente Cloud9/codeweb). Sem a env var definida,
+# o comportamento padrão (acesso direto) não muda.
+FORCE_SCRIPT_NAME = os.environ.get("DJANGO_SCRIPT_NAME") or None
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
@@ -34,6 +38,7 @@ ALLOWED_HOSTS = ["*"]
 
 
 if PROD_ENV:
+    import requests
     EC2_PRIVATE_IP = None
     try:
         EC2_PRIVATE_IP = requests.get(
@@ -165,7 +170,10 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
-STATIC_URL = '/static/'
+# Segue o mesmo prefixo de FORCE_SCRIPT_NAME, para que {% static %} gere o
+# caminho correto quando rodando atrás do proxy (ver urls.py para a rota que
+# efetivamente serve os arquivos, que usa o caminho sem o prefixo).
+STATIC_URL = (FORCE_SCRIPT_NAME or "") + "/static/"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
