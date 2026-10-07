@@ -35,22 +35,41 @@ DEBUG = True
 PROD_ENV = False
 COMMENTS = True
 ALLOWED_HOSTS = ["*"]
+CSRF_TRUSTED_ORIGINS = []
 
+# Detecta o IP/hostname público da instância EC2 (quando disponível) para que o
+# CsrfViewMiddleware aceite requisições feitas diretamente por esse endereço
+# (ex.: acesso via https://<ip-publico> com TLS terminado por um proxy na frente
+# do Django). Fora da EC2 (ex.: dev local) a chamada falha rapidamente e é
+# ignorada.
+import requests
+EC2_PRIVATE_IP = None
+try:
+    EC2_PRIVATE_IP = requests.get(
+        'http://169.254.169.254/latest/meta-data/public-hostname',
+        timeout=0.5).text
+    print(f"EC2 private IP: {EC2_PRIVATE_IP}")
+except requests.exceptions.RequestException:
+    print("Failed to get EC2 private IP, continuing without it.")
+    pass
 
-if PROD_ENV:
-    import requests
-    EC2_PRIVATE_IP = None
-    try:
-        EC2_PRIVATE_IP = requests.get(
-            'http://169.254.169.254/latest/meta-data/public-hostname',
-            timeout=0.01).text
-    except requests.exceptions.RequestException:
-        pass
+if EC2_PRIVATE_IP:
+    ALLOWED_HOSTS.append(EC2_PRIVATE_IP)
+    CSRF_TRUSTED_ORIGINS.append(f"https://{EC2_PRIVATE_IP}")
+    CSRF_TRUSTED_ORIGINS.append(f"http://{EC2_PRIVATE_IP}")
 
-    if EC2_PRIVATE_IP:
-        ALLOWED_HOSTS.append(EC2_PRIVATE_IP)
+# Este ambiente (Cloud9/codeweb) bloqueia o acesso a 169.254.169.254, então a
+# detecção acima nunca encontra o IP. Para esses casos, permite informar as
+# origens confiáveis explicitamente via variável de ambiente (ex. no .env):
+# DJANGO_CSRF_TRUSTED_ORIGINS="https://52.6.118.200,http://52.6.118.200"
+_extra_csrf_origins = os.environ.get("DJANGO_CSRF_TRUSTED_ORIGINS")
+if _extra_csrf_origins:
+    for origin in _extra_csrf_origins.split(","):
+        origin = origin.strip()
+        if origin and origin not in CSRF_TRUSTED_ORIGINS:
+            CSRF_TRUSTED_ORIGINS.append(origin)
 
-
+print(f"CSRF trusted origins: {CSRF_TRUSTED_ORIGINS}")
 # Application definition
 
 INSTALLED_APPS = [
@@ -65,6 +84,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'sgc.middleware.StripDuplicateScriptNameMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',

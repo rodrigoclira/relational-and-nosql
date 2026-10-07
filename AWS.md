@@ -88,3 +88,32 @@ python manage.py runserver 0.0.0.0:8000
 ```
 
 Se você mudar de porta, atualize o valor da variável junto (`/proxy/<nova-porta>`). Rodando localmente sem esse proxy, basta não definir a variável (ou `unset DJANGO_SCRIPT_NAME`) para manter o comportamento normal.
+
+## Erro "Origin checking failed" ao enviar formulários (CSRF)
+
+Se ao enviar um formulário (ex.: login) você receber a página de erro do Django
+`Origin checking failed - https://SEU-IP does not match any trusted origins`, é porque
+o proxy do Cloud9/codeweb expõe a aplicação via `https://` mas o Django não sabe
+confiar nessa origem. Nos Learner Labs da AWS Academy, o serviço de metadados da
+instância (`169.254.169.254`) costuma estar bloqueado, então a detecção automática do
+IP público no `settings.py` não funciona — é necessário informar a origem manualmente.
+
+Exporte a variável `DJANGO_CSRF_TRUSTED_ORIGINS` com o(s) IP(s)/host(s) usados para
+acessar a aplicação (separados por vírgula, incluindo o esquema `https://` ou
+`http://`) antes de iniciar o servidor:
+
+```
+export DJANGO_CSRF_TRUSTED_ORIGINS="https://SEU-IP-PUBLICO,http://SEU-IP-PUBLICO"
+python manage.py runserver 0.0.0.0:8000
+```
+
+Se o IP público da instância mudar (por exemplo, após reiniciá-la), atualize o valor
+e reinicie o servidor. Para não precisar descobrir o IP manualmente a cada vez, use o
+script `sgc/export_csrf_origin.sh`, que detecta o IP público atual e já exporta a
+variável (precisa ser chamado com `source`, para que a variável afete o seu shell):
+
+```
+cd sgc/
+source export_csrf_origin.sh
+python manage.py runserver 0.0.0.0:8000
+```
